@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>firebase</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  
+<input type="file" id="photo">
+<img id="image" />
+<button onclick="uploadimage()">uploadimage</button>
+
+<script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-storage.js"></script>
+
+<script>
+   //  Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    import { getAnalytics } from "firebase/analytics";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+const firebaseConfig = {
+  // Your Firebase configuration
+  apiKey: "AIzaSyATZR8EOhFRrzYh-wCMyB8_FkiXvovkpEs",
+      authDomain: "gstfile-9ed44.firebaseapp.com",
+      projectId: "gstfile-9ed44",
+      storageBucket: "gstfile-9ed44.appspot.com",
+      messagingSenderId: "170697848096",
+      appId: "1:170697848096:web:a00f82c12fd39981ed9345",
+      measurementId: "G-GX97YYFQBL"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+
+function uploadimage() {
+  const ref = firebase.storage(app).ref();
+  const file = document.querySelector("#photo").files[0];
+  const name = new Date().toString() + '-' + file.name;
+  const metadata = {
+    contentType: file.type
+  };
+
+  const task = ref.child(name).put(file, metadata);
+
+  task
+    .then(snapshot => snapshot.ref.getDownloadURL())
+    .then(url => {
+      console.log(url);
+      alert("Image uploaded successfully");
+      const image = document.querySelector('#image');
+      image.src = url;
+    })
+    .catch(error => {
+      console.log(error);
+      alert("Error uploading image");
+    });
+}
+</script>
+
+</body>
+</html>
